@@ -43,21 +43,19 @@ exports.addTask =  function(req, resp){
 exports.updateTask = function(req,resp, next){
 	co(function*(){
 		if(req.body && req.body != 'undefined'){
-			var task = req.body.updatedTask;
-			console.log(task);
-			if(!task && !task.id)
-				return resp.status(200).json({error: true, message:'Id is required for updatinng task'});
-			var updatedData = {};
-			updatedData.id = task.id;
-			if(task.name)
-				updatedData.name = task.name;
-			if(task.description)
-				updatedData.description = task.description;
-			TaskService.updateTask(updatedData, function(res1, err1){
+			var id = req.body.id;
+			if(!id || !req.body.updatedName || !req.body.updatedDescription){
+				return resp.status(401).send({error: true, message: 'missing params'});
+			}
+
+			var updatedTask = {
+				name : req.body.updatedName,
+				description : req.body.updatedDescription
+			}
+			TaskService.updateTask(id, updatedTask, function(err1, res1){
 				if(err1) return resp.status(200).json({error:true, message:err1 });
 				return resp.status(200).json({error:false, message:res1});
 			});
-
 		}
 	});
 }
@@ -72,7 +70,7 @@ exports.deleteTask = function(req, resp, next){
 				if (err1) {
 		            return resp.status(200).json({error: true,message: err});
 		        } else {
-		            return resp.status(200).json({error: false,message: 'Updated Successfully'});
+		            return resp.status(200).json({error: false,message: 'Deleted Successfully'});
 		        }
 			});			
 		}

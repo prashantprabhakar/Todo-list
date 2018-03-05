@@ -23,8 +23,8 @@ var TasksService = function(){
 		});
 	}
 
-	_self.updateTask = function(updatedTask, cb){
-		Tasks.findOneAndUpdate({_id:updatedTask.id},updatedTask,function(err, res){
+	_self.updateTask = function(id,  updatedTask, cb){
+		Tasks.findOneAndUpdate({_id:id},updatedTask,function(err, res){
 			if(err) { return cb("Unable to update")};
 			return cb("successfully updated");
 		});
